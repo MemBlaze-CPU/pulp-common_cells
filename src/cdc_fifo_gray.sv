@@ -98,9 +98,9 @@ module cdc_fifo_gray #(
   input  logic dst_ready_i
 );
 
-  T [2**LOG_DEPTH-1:0] async_data;
-  logic [LOG_DEPTH:0]  async_wptr;
-  logic [LOG_DEPTH:0]  async_rptr;
+  (* CDC_ASYNC = 1, DONT_TOUCH *) T [2**LOG_DEPTH-1:0] async_data;
+  (* CDC_ASYNC = 1, DONT_TOUCH *) logic [LOG_DEPTH:0]  async_wptr;
+  (* CDC_ASYNC = 1, DONT_TOUCH *) logic [LOG_DEPTH:0]  async_rptr;
 
   cdc_fifo_gray_src #(
     .T         ( T         ),
@@ -112,9 +112,9 @@ module cdc_fifo_gray #(
     .src_valid_i,
     .src_ready_o,
 
-    (* async *) .async_data_o ( async_data ),
-    (* async *) .async_wptr_o ( async_wptr ),
-    (* async *) .async_rptr_i ( async_rptr )
+    .async_data_o ( async_data ),
+    .async_wptr_o ( async_wptr ),
+    .async_rptr_i ( async_rptr )
   );
 
   cdc_fifo_gray_dst #(
@@ -127,9 +127,9 @@ module cdc_fifo_gray #(
     .dst_valid_o,
     .dst_ready_i,
 
-    (* async *) .async_data_i ( async_data ),
-    (* async *) .async_wptr_i ( async_wptr ),
-    (* async *) .async_rptr_o ( async_rptr )
+    .async_data_i ( async_data ),
+    .async_wptr_i ( async_wptr ),
+    .async_rptr_o ( async_rptr )
   );
 
   // Check the invariants.
