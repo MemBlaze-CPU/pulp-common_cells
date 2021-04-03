@@ -109,15 +109,6 @@ module rr_arb_tree #(
   output idx_t                idx_o
 );
 
-  // pragma translate_off
-  `ifndef VERILATOR
-  `ifndef XSIM
-  // Default SVA reset
-  default disable iff (!rst_ni || flush_i);
-  `endif
-  `endif
-  // pragma translate_on
-
   // just pass through in this corner case
   if (NumIn == unsigned'(1)) begin : gen_pass_through
     assign req_o    = req_i[0];
@@ -156,7 +147,7 @@ module rr_arb_tree #(
         assign lock_d     = req_o & ~gnt_i;
         assign req_d      = (lock_q) ? req_q : req_i;
 
-        always_ff @(posedge clk_i or negedge rst_ni) begin : p_lock_reg
+        always_ff @(posedge clk_i) begin : p_lock_reg
           if (!rst_ni) begin
             lock_q <= '0;
           end else begin
@@ -167,7 +158,7 @@ module rr_arb_tree #(
             end
           end
         end
-
+/*
         // pragma translate_off
         `ifndef VERILATOR
           lock: assert property(
@@ -184,8 +175,8 @@ module rr_arb_tree #(
                             enabled.");
         `endif
         // pragma translate_on
-
-        always_ff @(posedge clk_i or negedge rst_ni) begin : p_req_regs
+*/
+        always_ff @(posedge clk_i) begin : p_req_regs
           if (!rst_ni) begin
             req_q  <= '0;
           end else begin
@@ -236,7 +227,7 @@ module rr_arb_tree #(
       end
 
       // this holds the highest priority
-      always_ff @(posedge clk_i or negedge rst_ni) begin : p_rr_regs
+      always_ff @(posedge clk_i) begin : p_rr_regs
         if (!rst_ni) begin
           rr_q   <= '0;
         end else begin
@@ -306,7 +297,7 @@ module rr_arb_tree #(
         //////////////////////////////////////////////////////////////
       end
     end
-
+/*
     // pragma translate_off
     `ifndef VERILATOR
     `ifndef XSIM
@@ -343,6 +334,7 @@ module rr_arb_tree #(
     `endif
     `endif
     // pragma translate_on
+    */
   end
 
 endmodule : rr_arb_tree
