@@ -54,8 +54,18 @@ package cf_math_pkg;
     ///   `parameter type idx_t = logic[cf_math_pkg::idx_width(NumIdx)-1:0]`
     /// As typedef:
     ///   `typedef logic [cf_math_pkg::idx_width(NumIdx)-1:0] idx_t`
+
+    function automatic integer funclog2;
+        input integer value;
+    begin
+	value = value - 1;
+	for (funclog2 = 0; value > 0; funclog2 = funclog2 + 1)
+	     value = value >> 1;
+	end
+    endfunction        
+
     function automatic integer unsigned idx_width (input integer unsigned num_idx);
-        return (num_idx > 32'd1) ? unsigned'($clog2(num_idx)) : 32'd1;
+        return (num_idx > 32'd1) ? unsigned'(funclog2(num_idx)) : 32'd1;
     endfunction
 
 endpackage
